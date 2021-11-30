@@ -1,0 +1,199 @@
+# i3 config file (v4)
+#
+# Please see https://i3wm.org/docs/userguide.html for a complete reference!
+
+set $mod Mod4
+
+font pango:Hack Nerd Font Mono 12
+#font pango:Hack Mono 12
+exec --no-startup-id xss-lock --transfer-sleep-lock -- i3lock --nofork
+
+#workspaces stuff
+set $ws1 "1:HP"
+set $ws2 "2:Asus"
+set $ws3 "3:MegaMonitor"
+set $ws4 "4:Werk"
+set $ws5 "5:Games"
+set $ws6 "6:Mail"
+set $ws7 "7:Extra"
+set $ws8 "8:Stuffz"
+set $ws9 "9:Uh"
+set $ws10 "10:Oh"
+
+# switch to workspace
+bindsym Mod4+1 workspace number $ws1
+bindsym Mod4+2 workspace number $ws2
+bindsym Mod4+3 workspace number $ws3
+bindsym Mod4+4 workspace number $ws4
+bindsym Mod4+5 workspace number $ws5
+bindsym Mod4+6 workspace number $ws6
+bindsym Mod4+7 workspace number $ws7
+bindsym Mod4+8 workspace number $ws8
+bindsym Mod4+9 workspace number $ws9
+bindsym Mod4+0 workspace number $ws10
+
+# move focused container to workspace
+bindsym Mod4+Shift+1 move container to workspace number $ws1
+bindsym Mod4+Shift+2 move container to workspace number $ws2
+bindsym Mod4+Shift+3 move container to workspace number $ws3
+bindsym Mod4+Shift+4 move container to workspace number $ws4
+bindsym Mod4+Shift+5 move container to workspace number $ws5
+bindsym Mod4+Shift+6 move container to workspace number $ws6
+bindsym Mod4+Shift+7 move container to workspace number $ws7
+bindsym Mod4+Shift+8 move container to workspace number $ws8
+bindsym Mod4+Shift+9 move container to workspace number $ws9
+bindsym Mod4+Shift+0 move container to workspace number $ws10
+
+# NetworkManager is the most popular way to manage wireless networks on Linux,
+# and nm-applet is a desktop environment-independent system tray GUI for it.
+exec --no-startup-id nm-applet
+
+# Use pactl to adjust volume in PulseAudio.
+set $refresh_i3status killall -SIGUSR1 i3status
+bindsym XF86AudioRaiseVolume exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ +10% && $refresh_i3status
+bindsym XF86AudioLowerVolume exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ -10% && $refresh_i3status
+bindsym XF86AudioMute exec --no-startup-id pactl set-sink-mute @DEFAULT_SINK@ toggle && $refresh_i3status
+bindsym XF86AudioMicMute exec --no-startup-id pactl set-source-mute @DEFAULT_SOURCE@ toggle && $refresh_i3status
+
+# Use Mouse+$mod to drag floating windows to their wanted position
+floating_modifier $mod
+
+# start a terminal
+bindsym $mod+Return exec alacritty
+#bindsym $mod+Return exec i3-sensible-terminal
+# Add firefox
+bindsym $mod+Shift+Return exec --no-startup-id firefox
+
+# change container layout (stacked, tabbed, toggle split)
+bindsym $mod+s layout stacking
+bindsym $mod+w layout tabbed
+bindsym $mod+e layout toggle split
+
+# kill focused window
+bindsym $mod+Shift+q kill
+
+# use ROFI instead of dmenu
+bindsym $mod+space exec --no-startup-id "rofi -modi 'drun,run' -show drun -font 'Roboto 16' -show-icons"
+
+# setup screen locking
+bindsym $mod+l exec --no-startup-id i3lock -c 000000
+
+# alternatively, you can use the cursor keys:
+bindsym $mod+Left move left
+bindsym $mod+Down move down
+bindsym $mod+Up move up
+bindsym $mod+Right move right
+
+# split in horizontal orientation
+bindsym $mod+h split h
+
+# split in vertical orientation
+bindsym $mod+v split v
+
+# enter fullscreen mode for the focused container
+bindsym $mod+f fullscreen toggle
+
+# toggle tiling / floating
+bindsym $mod+Shift+space floating toggle
+
+# change focus between tiling / floating windows
+#bindsym $mod+space focus mode_toggle
+
+# focus the parent container
+#bindsym $mod+a focus parent
+
+# focus the child container
+#bindsym $mod+d focus child
+
+# reload the configuration file
+bindsym $mod+Shift+c reload
+# restart i3 inplace (preserves your layout/session, can be used to upgrade i3)
+bindsym $mod+Shift+r restart
+# exit i3 (logs you out of your X session)
+bindsym $mod+Shift+e exec "i3-nagbar -t warning -m 'Exit?' -B 'Yes, exit i3' 'i3-msg exit'"
+
+# resize window (you can also use the mouse for that)
+mode "resize" {
+        # same bindings, but for the arrow keys
+        bindsym Left resize shrink width 20 px or 20 ppt
+        bindsym Down resize grow height 20 px or 20 ppt
+        bindsym Up resize shrink height 20 px or 20 ppt
+        bindsym Right resize grow width 20 px or 20 ppt
+
+        # back to normal: Enter or Escape or $mod+r
+        bindsym Return mode "default"
+        bindsym Escape mode "default"
+        bindsym $mod+r mode "default"
+}
+
+bindsym $mod+r mode "resize"
+
+# no window titles
+new_window pixel 1
+
+bar {
+  colors {
+    background #282A36
+    statusline #F8F8F2
+    separator  #44475A
+
+    focused_workspace  #44475A #44475A #F8F8F2
+    active_workspace   #282A36 #44475A #F8F8F2
+    inactive_workspace #282A36 #282A36 #BFBFBF
+    urgent_workspace   #FF5555 #FF5555 #F8F8F2
+    binding_mode       #FF5555 #FF5555 #F8F8F2
+  }
+        strip_workspace_numbers yes
+        position top
+        #status_command /home/j/.cache/pypoetry/virtualenvs/py3status-FCqx726W-py3.9/bin/py3status --debug -c $HOME/.config/i3/i3status.conf -l /tmp/py3status.log
+        status_command py3status --debug -c $HOME/.config/i3/i3status.conf -l /tmp/py3status.log
+        tray_output primary
+        font pango:Hack Nerd Font 15
+        separator_symbol "|"
+	tray_padding 0
+        workspace_buttons yes
+        output qxl-0
+        #output DP-3
+	workspace_min_width 40
+}
+
+#
+# Try doing some layout stuffs
+#
+#exec --no-startup-id "i3-msg 'workspace 1; append_layout /home/j/.config/i3/layouts/asus.ws1.json'"
+#exec --no-startup-id "i3-msg 'workspace 2; append_layout /home/j/.config/i3/layouts/crg49.ws2.json'"
+#exec --no-startup-id "i3-msg 'workspace 3; append_layout /home/j/.config/i3/layouts/hp.ws3.json'"
+# startup apps
+exec --no-startup-id alacritty
+exec --no-startup-id firefox
+# Set Monitor setup
+
+# setup my monitors
+#exec --no-startup-id "~/bin/set-xrandr"
+# setup background
+#exec --no-startup-id "feh --bg-scale ~/.bg/bg.jpg"
+#exec --no-startup-id "set-dpi"
+
+#exec --no-startup-id "~/bin/restart_picom"
+
+# floating windows
+# bindcode 67 == F1 (button on the keyboard)
+bindcode 67 [instance="dropdown"] scratchpad show; [instance="dropdown"] move position center
+for_window [instance="dropdown"] floating enable
+for_window [instance="dropdown"] resize set 2024 768 
+for_window [instance="dropdown"] move scratchpad
+for_window [instance="dropdown"] border pixel 4
+exec --no-startup-id "alacritty --class dropdown -t dropdown -e tmux"
+
+# F2 newsboat
+bindcode 68 [instance="newsboat"] scratchpad show; [instance="newsboat"] move position center
+for_window [instance="newsboat"] floating enable
+for_window [instance="newsboat"] resize set 2024 768 
+for_window [instance="newsboat"] move scratchpad
+for_window [instance="newsboat"] border pixel 4
+exec --no-startup-id "alacritty --class newsboat -t newsboat -e tmux new -s newsboat newsboat"
+
+# setup default floating windows
+for_window [class="rdesktop"] floating enable
+for_window [class="RPCS3"] floating enable
+for_window [class="mpv"] floating enable
